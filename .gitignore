@@ -30,3 +30,10 @@
 *.exe
 *.out
 *.app
+
+# My ignore
+.vscode
+Test
+1.cpp
+2.cpp
+3.cpp
