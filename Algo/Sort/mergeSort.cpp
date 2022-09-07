@@ -27,10 +27,6 @@ int main()
         cout << " " << setw(2) << i;
     }
 
-    // cout << endl
-    //      << "Input comand: ";
-    // cin >> cmd;
-
     mergeSort(nums);
     cout << endl
          << setw(17) << "Sorted nums: ";
