@@ -3,6 +3,7 @@
 #include <ctime>
 #include <cstdlib>
 #include <vector>
+#define flag 2
 
 using namespace std;
 
@@ -21,6 +22,7 @@ int main(void)
     }
 
     //* Insertion sort
+#if flag == 1
 
     for (int i = 1; i < vec.size(); i++)
     {
@@ -38,6 +40,25 @@ int main(void)
             }
         }
     }
+
+#endif
+
+#if flag == 2
+
+    for (int i = 1; i < vec.size(); i++)
+    {
+        int key = vec.at(i);
+        int j = i - 1;
+
+        while (j >= 0 && vec.at(j) > key)
+        {
+            vec.at(j + 1) = vec.at(j);
+            j--;
+        }
+        vec.at(j + 1) = key;
+    }
+
+#endif
 
     //* print result
 
