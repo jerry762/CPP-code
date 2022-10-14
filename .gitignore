@@ -33,11 +33,6 @@
 
 # My ignore
 .vscode
-Test
-1.cpp
-2.cpp
-3.cpp
-snake.cpp
+test
 
-Algo/Sort/Shell.cpp
 

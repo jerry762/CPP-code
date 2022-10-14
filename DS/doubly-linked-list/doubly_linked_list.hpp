@@ -1,9 +1,9 @@
 #if !defined(MY_LINKED_LIST_H)
 #define MY_LINKED_LIST_H
 
-#include "Node.hpp"
 #include <initializer_list>
 #include <iostream>
+#include "node.hpp"
 
 // TODO: This is the starting point of the declaration.
 

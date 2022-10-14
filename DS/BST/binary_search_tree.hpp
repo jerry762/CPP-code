@@ -6,7 +6,7 @@
 #include <initializer_list>
 #include <queue>
 #include <stack>
-#include "Node.hpp"
+#include "node.hpp"
 
 class BST
 {
