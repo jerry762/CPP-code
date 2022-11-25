@@ -1,94 +1,100 @@
 #include <iostream>
+#include <chrono>
 #include <vector>
-#include <set>
-#include <cstdlib>
-#include <ctime>
+#include <random>
+#include <algorithm>
+#include <iomanip>
+#include <functional>
 
-using namespace std;
-
-int binary_search_iterative(vector<int> &numbers, int &target);
-int binary_search_recursive(vector<int> &numbers, int &target, int l, int r);
-
-ostream &operator<<(ostream &out, const vector<int> &numbers);
+bool binary_search_recursive(std::vector<int> &vec, int left, int right, int target);
+bool binary_search_iterative(std::vector<int> &vec, int left, int right, int target);
 
 int main()
 {
-    srand(time(0));
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::uniform_int_distribution<int> dist(1, 100);
+    std::default_random_engine gen(seed);
 
-    int result, target;
-    set<int> set;
-    vector<int> numbers;
+    std::vector<int> vec;
+    int target = 0;
 
-    cout << numbers;
+    while (1)
+    {
+        for (size_t i = 0; i < 10; i++)
+        {
+            int target = dist(gen);
 
-    while (set.size() < 10)
-        set.insert(rand() % 100);
+            if (std::find(vec.begin(), vec.end(), target) == vec.end())
+                vec.push_back(target);
+            else
+                i--;
+        }
 
-    numbers.assign(set.begin(), set.end());
+        sort(vec.begin(), vec.end(), std::less<int>());
 
-    cout << numbers << endl;
-    cout << "Enter the target: ";
-    cin >> target;
+        for (size_t i = 0; i < vec.size(); i++)
+        {
+            if (i == vec.size() - 1)
+                std::cout << vec.at(i) << "(" << i << ")";
+            else
+                std::cout << vec.at(i) << "(" << i << "), ";
+        }
 
-    result = binary_search_iterative(numbers, target);
-    cout << "Iterative Result: " << result << endl;
+        std::cout << std::endl
+                  << "Input target: ";
 
-    result = binary_search_recursive(numbers, target, 0, numbers.size());
-    cout << "Recursive Result: " << result;
+        std::cin >> target;
+
+        std::cout << "binary search recursive: "
+                  << std::boolalpha << binary_search_recursive(vec, 0, vec.size(), target) << std::endl;
+
+        std::cout << "binary search iterative: "
+                  << std::boolalpha << binary_search_iterative(vec, 0, vec.size(), target) << std::endl
+                  << std::endl;
+
+        vec.clear();
+    }
+
+    return 0;
 }
 
-ostream &operator<<(ostream &out, const vector<int> &numbers)
+bool binary_search_recursive(std::vector<int> &vec, int left, int right, int target)
 {
-    for (int i : numbers)
+    if (left == right)
     {
-        out << i << " ";
+        std::cout << "not found " << target << " | ";
+        return false;
     }
-    return out;
-}
-int binary_search_iterative(vector<int> &numbers, int &target)
-{
-    int l = 0, r = numbers.size();
 
-    while (l <= r)
-    {
-        int m = (l + r) / 2;
+    int mid = (left + right) / 2;
 
-        if (numbers[m] == target)
-        {
-            return m;
-        }
-        else if (target > numbers[m])
-        {
-            l = m + 1;
-        }
-        else
-        {
-            r = m - 1;
-        }
-    }
-    return -1;
-}
-int binary_search_recursive(vector<int> &numbers, int &target, int l, int r)
-{
-    if (l <= r)
-    {
-        int m = (l + r) / 2;
-
-        if (numbers[m] == target)
-        {
-            return m;
-        }
-        else if (target > numbers[m])
-        {
-            return binary_search_recursive(numbers, target, m + 1, r);
-        }
-        else
-        {
-            return binary_search_recursive(numbers, target, l, m - 1);
-        }
-    }
+    if (target > vec.at(mid))
+        return binary_search_recursive(vec, mid + 1, right, target);
+    else if (target < vec.at(mid))
+        return binary_search_recursive(vec, left, mid, target);
     else
     {
-        return -1;
+        std::cout << "found " << target << " | at index " << mid << " | ";
+        return true;
     }
+}
+
+bool binary_search_iterative(std::vector<int> &vec, int left, int right, int target)
+{
+    while (left != right)
+    {
+        int mid = (left + right) / 2;
+
+        if (target > vec.at(mid))
+            left = mid + 1;
+        else if (target < vec.at(mid))
+            right = mid;
+        else
+        {
+            std::cout << "found " << target << " | at index " << mid << " | ";
+            return true;
+        }
+    }
+    std::cout << "not found " << target << " | ";
+    return false;
 }
