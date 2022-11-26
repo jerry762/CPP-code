@@ -48,10 +48,10 @@ int main()
         std::cin >> target;
 
         std::cout << "binary search recursive: "
-                  << std::boolalpha << binary_search_recursive(vec, 0, vec.size(), target) << std::endl;
+                  << std::boolalpha << binary_search_recursive(vec, 0, vec.size() - 1, target) << std::endl;
 
         std::cout << "binary search iterative: "
-                  << std::boolalpha << binary_search_iterative(vec, 0, vec.size(), target) << std::endl
+                  << std::boolalpha << binary_search_iterative(vec, 0, vec.size() - 1, target) << std::endl
                   << std::endl;
 
         vec.clear();
@@ -62,7 +62,7 @@ int main()
 
 bool binary_search_recursive(std::vector<int> &vec, int left, int right, int target)
 {
-    if (left == right)
+    if (left > right)
     {
         std::cout << "not found " << target << " | ";
         return false;
@@ -73,7 +73,7 @@ bool binary_search_recursive(std::vector<int> &vec, int left, int right, int tar
     if (target > vec.at(mid))
         return binary_search_recursive(vec, mid + 1, right, target);
     else if (target < vec.at(mid))
-        return binary_search_recursive(vec, left, mid, target);
+        return binary_search_recursive(vec, left, mid - 1, target);
     else
     {
         std::cout << "found " << target << " | at index " << mid << " | ";
@@ -83,14 +83,14 @@ bool binary_search_recursive(std::vector<int> &vec, int left, int right, int tar
 
 bool binary_search_iterative(std::vector<int> &vec, int left, int right, int target)
 {
-    while (left != right)
+    while (left <= right)
     {
         int mid = (left + right) / 2;
 
         if (target > vec.at(mid))
             left = mid + 1;
         else if (target < vec.at(mid))
-            right = mid;
+            right = mid - 1;
         else
         {
             std::cout << "found " << target << " | at index " << mid << " | ";
