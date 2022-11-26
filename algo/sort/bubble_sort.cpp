@@ -1,50 +1,54 @@
 #include <iostream>
-#include <algorithm>
 #include <vector>
-#include <ctime>
-#include <cstdlib>
+#include <random>
+#include <algorithm>
 
-using namespace std;
+#define MAX_SIZE 10
 
-int main(void)
+void bubble_sort(std::vector<int> &vec);
+
+int main()
 {
-    srand(time(nullptr));
+    std::random_device rd;
+    std::uniform_int_distribution<int> dist(1, 100);
 
-    //* init
+    std::vector<int> vec;
 
-    vector<int> vec;
-    bool flag = true;
+    for (size_t i = 0; i < MAX_SIZE; i++)
+        vec.push_back(dist(rd));
 
-    for (int i = 0; i < 10; i++)
+    std::cout << "Bubble_Sort (origin): ";
+
+    for (const int &i : vec)
+        std::cout << i << " ";
+
+    bubble_sort(vec);
+
+    std::cout << std::endl
+              << "Bubble_Sort (sorted): ";
+
+    for (const int &i : vec)
+        std::cout << i << " ";
+
+    return 0;
+}
+
+void bubble_sort(std::vector<int> &vec)
+{
+    for (size_t i = 0; i < vec.size() - 1; i++)
     {
-        vec.push_back(rand() % 100 + 1);
-        cout << vec.at(i) << " ";
-    }
+        bool change = false;
 
-    //* Bubble sort
-
-    for (int i = 0; i < vec.size() - 1; i++)
-    {
-        flag = true;
-        for (int j = 0; j < vec.size() - 1 - i; j++)
+        for (size_t j = 0; j < vec.size() - i - 1; j++)
         {
             if (vec.at(j) > vec.at(j + 1))
             {
-                swap(vec.at(j), vec.at(j + 1));
-                flag = false;
+                std::swap(vec.at(j), vec.at(j + 1));
+                change = true;
             }
         }
 
-        if (flag)
+        if (!change)
             break;
     }
-
-    //* print result
-
-    cout << "\n";
-
-    for (const int &i : vec)
-        cout << i << " ";
-
-    return 0;
 }
