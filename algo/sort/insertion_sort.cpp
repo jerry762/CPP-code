@@ -1,51 +1,41 @@
 #include <iostream>
 #include <algorithm>
-#include <ctime>
-#include <cstdlib>
+#include <random>
 #include <vector>
-#define flag 2
 
-using namespace std;
+#define MAX_SIZE 10
 
-int main(void)
+void insertion_sort(std::vector<int> &vec);
+
+int main()
 {
-    srand(time(nullptr));
+    std::random_device rd;
+    std::uniform_int_distribution<int> dist(1, 100);
 
-    //* init
+    std::vector<int> vec;
 
-    vector<int> vec;
+    for (size_t i = 0; i < MAX_SIZE; i++)
+        vec.push_back(dist(rd));
 
-    for (int i = 0; i < 10; i++)
-    {
-        vec.push_back(rand() % 100 + 1);
-        cout << vec.at(i) << " ";
-    }
+    std::cout << "Insertion_Sort (origin): ";
 
-    //* Insertion sort
-#if flag == 1
+    for (const int &i : vec)
+        std::cout << i << " ";
 
-    for (int i = 1; i < vec.size(); i++)
-    {
-        int key = vec.at(i);
-        for (int j = 0; j < i; j++)
-        {
-            if (key < vec.at(j))
-            {
-                for (int k = 0; k < i - j; k++)
-                {
-                    vec.at(i - k) = vec.at(i - 1 - k);
-                }
-                vec.at(j) = key;
-                break;
-            }
-        }
-    }
+    insertion_sort(vec);
 
-#endif
+    std::cout << std::endl
+              << "Insertion_Sort (sorted): ";
 
-#if flag == 2
+    for (const int &i : vec)
+        std::cout << i << " ";
 
-    for (int i = 1; i < vec.size(); i++)
+    return 0;
+}
+
+void insertion_sort(std::vector<int> &vec)
+{
+    for (size_t i = 1; i < vec.size(); i++)
     {
         int key = vec.at(i);
         int j = i - 1;
@@ -57,15 +47,4 @@ int main(void)
         }
         vec.at(j + 1) = key;
     }
-
-#endif
-
-    //* print result
-
-    cout << "\n";
-
-    for (const int &a : vec)
-        cout << a << " ";
-
-    return 0;
 }
