@@ -1,45 +1,49 @@
 #include <iostream>
 #include <algorithm>
-#include <ctime>
-#include <cstdlib>
+#include <random>
 #include <vector>
 
-using namespace std;
+#define MAX_SIZE 10
 
-int main(void)
+void selection_sort(std::vector<int> &vec);
+
+int main()
 {
-    srand(time(nullptr));
+    std::random_device rd;
+    std::uniform_int_distribution<int> dist(1, 100);
 
-    //* init
+    std::vector<int> vec;
 
-    vector<int> vec;
+    for (size_t i = 0; i < MAX_SIZE; i++)
+        vec.push_back(dist(rd));
 
-    for (int i = 0; i < 10; i++)
-    {
-        vec.push_back(rand() % 100 + 1);
-        cout << vec.at(i) << " ";
-    }
-
-    //* Selection sort
-
-    for (int i = 0; i < vec.size() - 1; i++)
-    {
-        int maxIndex = 0;
-
-        for (int j = 1; j < vec.size() - i; j++)
-        {
-            if (vec.at(j) > vec.at(maxIndex))
-                maxIndex = j;
-        }
-        swap(vec.at(maxIndex), vec.at(vec.size() - 1 - i));
-    }
-
-    //* print result
-
-    cout << "\n";
+    std::cout << "Selection_Sort (origin): ";
 
     for (const int &i : vec)
-        cout << i << " ";
+        std::cout << i << " ";
+
+    selection_sort(vec);
+
+    std::cout << std::endl
+              << "Selection_Sort (sorted): ";
+
+    for (const int &i : vec)
+        std::cout << i << " ";
 
     return 0;
+}
+
+void selection_sort(std::vector<int> &vec)
+{
+    for (size_t i = 0; i < vec.size() - 1; i++)
+    {
+        size_t index = i;
+
+        for (size_t j = i + 1; j < vec.size(); j++)
+        {
+            if (vec.at(index) > vec.at(j))
+                index = j;
+        }
+        std::swap(vec.at(i), vec.at(index));
+    }
 }
