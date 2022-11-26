@@ -6,6 +6,8 @@
 #include <iomanip>
 #include <functional>
 
+#define MAX_SIZE 10
+
 bool binary_search_recursive(std::vector<int> &vec, int left, int right, int target);
 bool binary_search_iterative(std::vector<int> &vec, int left, int right, int target);
 
@@ -20,7 +22,7 @@ int main()
 
     while (1)
     {
-        for (size_t i = 0; i < 10; i++)
+        for (size_t i = 0; i < MAX_SIZE; i++)
         {
             int target = dist(gen);
 
