@@ -1,81 +1,74 @@
 #include <iostream>
-#include <iomanip>
+#include <algorithm>
+#include <random>
 #include <vector>
-#include <cstdlib>
-#include <ctime>
+#include <numeric>
 
-using namespace std;
+#define MAX_SIZE 10
 
-void mergeSort(vector<int> &nums);
-void divide(vector<int> &nums, int left, int right);
-void conquer(vector<int> &nums, int left, int mid, int right);
-bool compare(int a, int b);
+void merge_sort(std::vector<int> &vec, int left, int right);
+void merge(std::vector<int> &vec, int left, int mid, int right);
 
 int main()
 {
-    srand(time(0));
-    int size;
-    char cmd;
-    cout << "Input nums size: ";
-    cin >> size;
-    vector<int> nums(size);
+    std::random_device rd;
+    std::uniform_int_distribution<int> dist(1, 100);
 
-    cout << setw(17) << "Original nums: ";
-    for (int &i : nums)
-    {
-        i = rand() % 100;
-        cout << " " << setw(2) << i;
-    }
+    std::vector<int> vec;
 
-    mergeSort(nums);
-    cout << endl
-         << setw(17) << "Sorted nums: ";
+    for (size_t i = 0; i < MAX_SIZE; i++)
+        vec.push_back(dist(rd));
 
-    for (const int &i : nums)
-        cout << " " << setw(2) << i;
+    std::cout << "Merge_Sort (origin): ";
+
+    for (const int &i : vec)
+        std::cout << i << " ";
+
+    merge_sort(vec, 0, vec.size() - 1);
+
+    std::cout << std::endl
+              << "Merge_Sort (sorted): ";
+
+    for (const int &i : vec)
+        std::cout << i << " ";
+
     return 0;
 }
-void mergeSort(vector<int> &nums)
+
+void merge_sort(std::vector<int> &vec, int left, int right)
 {
-    if (nums.size() < 2)
+    if (left >= right)
         return;
-    divide(nums, 0, nums.size() - 1);
+
+    int mid = (left + right) / 2;
+
+    merge_sort(vec, left, mid);      //* divide
+    merge_sort(vec, mid + 1, right); //* divide
+    merge(vec, left, mid, right);    //* combine
 }
-void divide(vector<int> &nums, int left, int right)
+
+void merge(std::vector<int> &vec, int left, int mid, int right)
 {
-    if (left < right)
+    std::vector<int> leftSubArr(vec.begin() + left, vec.begin() + mid + 1);
+    std::vector<int> rightSubArr(vec.begin() + mid + 1, vec.begin() + right + 1);
+
+    leftSubArr.push_back(std::numeric_limits<int>::max());
+    rightSubArr.push_back(std::numeric_limits<int>::max());
+
+    int leftIndex = 0;
+    int rightIndex = 0;
+
+    for (size_t i = left; i <= right; i++)
     {
-        int mid = left + (right - left) / 2;
-        divide(nums, left, mid);
-        divide(nums, mid + 1, right);
-        conquer(nums, left, mid, right);
-    }
-}
-void conquer(vector<int> &nums, int left, int mid, int right)
-{
-    vector<int> l(nums.begin() + left, nums.begin() + mid + 1);
-    vector<int> r(nums.begin() + mid + 1, nums.begin() + right + 1);
-    while (!l.empty() && !r.empty())
-    {
-        if (l.back() > r.back())
+        if (leftSubArr.at(leftIndex) > rightSubArr.at(rightIndex))
         {
-            nums[right--] = l.back();
-            l.pop_back();
+            vec.at(i) = rightSubArr.at(rightIndex);
+            rightIndex++;
         }
         else
         {
-            nums[right--] = r.back();
-            r.pop_back();
+            vec.at(i) = leftSubArr.at(leftIndex);
+            leftIndex++;
         }
-    }
-    while (!l.empty())
-    {
-        nums[right--] = l.back();
-        l.pop_back();
-    }
-    while (!r.empty())
-    {
-        nums[right--] = r.back();
-        r.pop_back();
     }
 }
