@@ -28,8 +28,8 @@ list: {43, 8, 6, 3, 12, 68, 8, 6, 43, 50, 70, 50}
 
 int main()
 {
-  BST bst{43, 8, 6, 3, 12, 68, 8, 6, 43, 50, 70, 50};
-  // BST bst{5, 1, 6};
+  BinarySearchTree bst{43, 8, 6, 3, 12, 68, 8, 6, 43, 50, 70, 50};
+  // BinarySearchTree bst{5, 1, 6};
 
   cout << bst.getSize() << endl;
   cout << bst;

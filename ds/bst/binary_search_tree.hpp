@@ -6,30 +6,30 @@
 #include <initializer_list>
 #include <queue>
 #include <stack>
-#include "node.hpp"
+#include "binary_node.hpp"
 
-class BST
+class BinarySearchTree
 {
 private:
-    Node *m_root;
+    BinaryNode *m_root;
     size_t m_size;
     void reset();
-    void preorder_recursive_implement(Node *currNode) const;      //* completed
-    void inorder_recursive_implement(Node *currNode) const;       //* completed
-    void postorder_recursive_implement(Node *currNode) const;     //* completed
-    Node *insert_recursive_implement(Node *currNode, double num); //* completed
-    bool remove_recursive_implement(Node *currNode, double num);
-    Node *successor(Node *currNode) const;   //* completed
-    Node *predecessor(Node *currNode) const; //* completed
+    void preorder_recursive_implement(BinaryNode *currNode) const;      //* completed
+    void inorder_recursive_implement(BinaryNode *currNode) const;       //* completed
+    void postorder_recursive_implement(BinaryNode *currNode) const;     //* completed
+    BinaryNode *insert_recursive_implement(BinaryNode *currNode, double num); //* completed
+    bool remove_recursive_implement(BinaryNode *currNode, double num);
+    BinaryNode *successor(BinaryNode *currNode) const;   //* completed
+    BinaryNode *predecessor(BinaryNode *currNode) const; //* completed
 
 public:
-    explicit BST();                          //* completed
-    explicit BST(size_t size);               //* completed
-    BST(size_t size, int fillNum);           //* completed
-    BST(std::initializer_list<double> list); //* completed
-    ~BST();
-    BST(BST &bst) = delete;            //* completed
-    BST &operator=(BST &bst) = delete; //* completed
+    explicit BinarySearchTree();                          //* completed
+    explicit BinarySearchTree(size_t size);               //* completed
+    BinarySearchTree(size_t size, int fillNum);           //* completed
+    BinarySearchTree(std::initializer_list<double> list); //* completed
+    ~BinarySearchTree();
+    BinarySearchTree(BinarySearchTree &bst) = delete;            //* completed
+    BinarySearchTree &operator=(BinarySearchTree &bst) = delete; //* completed
     void insert_iterative(double num); //* completed
     void insert_recursive(double num); //* completed
     bool remove_iterative(double num); //* completed
@@ -44,34 +44,34 @@ public:
     bool search(double num) const;                                      //* completed
     bool empty() const;                                                 //* completed
     size_t getSize() const;                                             //* completed
-    friend std::ostream &operator<<(std::ostream &out, const BST &bST); //* completed
+    friend std::ostream &operator<<(std::ostream &out, const BinarySearchTree &bST); //* completed
     void test();
 };
 
-BST::BST() : m_root(nullptr), m_size(0) {}
+BinarySearchTree::BinarySearchTree() : m_root(nullptr), m_size(0) {}
 
-BST::BST(size_t size) : m_root(new Node(size, 0)), m_size(size) {}
+BinarySearchTree::BinarySearchTree(size_t size) : m_root(new BinaryNode(size, 0)), m_size(size) {}
 
-BST::BST(size_t size, int fillNum) : m_root(new Node(size, fillNum)), m_size(size) {}
+BinarySearchTree::BinarySearchTree(size_t size, int fillNum) : m_root(new BinaryNode(size, fillNum)), m_size(size) {}
 
-BST::BST(std::initializer_list<double> list) : m_root(nullptr), m_size(0)
+BinarySearchTree::BinarySearchTree(std::initializer_list<double> list) : m_root(nullptr), m_size(0)
 {
     for (const double i : list)
         insert_recursive(i);
 }
 
-BST::~BST()
+BinarySearchTree::~BinarySearchTree()
 {
 }
 
-void BST::insert_iterative(double num)
+void BinarySearchTree::insert_iterative(double num)
 {
     if (empty())
-        m_root = new Node(num);
+        m_root = new BinaryNode(num);
     else
     {
-        Node *newNode = new Node(num);
-        Node *currNode = m_root;
+        BinaryNode *newNode = new BinaryNode(num);
+        BinaryNode *currNode = m_root;
 
         while (newNode)
         {
@@ -106,22 +106,22 @@ void BST::insert_iterative(double num)
     m_size++;
 }
 
-void BST::insert_recursive(double num)
+void BinarySearchTree::insert_recursive(double num)
 {
     if (empty())
-        m_root = new Node(num);
+        m_root = new BinaryNode(num);
     else
         insert_recursive_implement(m_root, num);
 
     m_size++;
 }
 
-Node *BST::insert_recursive_implement(Node *currNode, double num)
+BinaryNode *BinarySearchTree::insert_recursive_implement(BinaryNode *currNode, double num)
 {
     if (!currNode)
-        return new Node(num);
+        return new BinaryNode(num);
 
-    Node *tempNode = nullptr;
+    BinaryNode *tempNode = nullptr;
 
     if (num < currNode->getNumber())
     {
@@ -138,7 +138,7 @@ Node *BST::insert_recursive_implement(Node *currNode, double num)
     return currNode;
 }
 
-bool BST::remove_iterative(double num)
+bool BinarySearchTree::remove_iterative(double num)
 {
     if (empty())
     {
@@ -147,8 +147,8 @@ bool BST::remove_iterative(double num)
     }
     else
     {
-        Node *currNode = m_root;
-        Node *prevNode = nullptr;
+        BinaryNode *currNode = m_root;
+        BinaryNode *prevNode = nullptr;
 
         while (currNode && currNode->getNumber() != num)
         {
@@ -163,15 +163,15 @@ bool BST::remove_iterative(double num)
         {
             if (currNode->getCount() == 1)
             {
-                Node *connectedNode = nullptr;
-                Node *successorNode = successor(currNode);
-                Node *predecessorNode = predecessor(currNode);
+                BinaryNode *connectedNode = nullptr;
+                BinaryNode *successorNode = successor(currNode);
+                BinaryNode *predecessorNode = predecessor(currNode);
 
                 if (currNode->getLeftPtr() && currNode->getRightPtr()) //* two nodes
                 {
                     connectedNode = successorNode; //* successorNode set default
 
-                    Node tempNode(connectedNode->getCount(), connectedNode->getNumber());
+                    BinaryNode tempNode(connectedNode->getCount(), connectedNode->getNumber());
 
                     connectedNode->setCount(1);
                     remove_iterative(connectedNode->getNumber());
@@ -186,7 +186,7 @@ bool BST::remove_iterative(double num)
                     else
                         connectedNode = successorNode;
 
-                    Node tempNode(connectedNode->getCount(), connectedNode->getNumber());
+                    BinaryNode tempNode(connectedNode->getCount(), connectedNode->getNumber());
 
                     connectedNode->setCount(1);
                     remove_iterative(connectedNode->getNumber());
@@ -228,17 +228,17 @@ bool BST::remove_iterative(double num)
     return true;
 }
 
-bool BST::remove_recursive(double num)
+bool BinarySearchTree::remove_recursive(double num)
 {
     return true;
 }
 
-bool BST::remove_recursive_implement(Node *currNode, double num)
+bool BinarySearchTree::remove_recursive_implement(BinaryNode *currNode, double num)
 {
     return true;
 }
 
-void BST::preorder_recursive_implement(Node *currNode) const
+void BinarySearchTree::preorder_recursive_implement(BinaryNode *currNode) const
 {
     if (currNode)
     {
@@ -249,7 +249,7 @@ void BST::preorder_recursive_implement(Node *currNode) const
     }
 }
 
-void BST::inorder_recursive_implement(Node *currNode) const
+void BinarySearchTree::inorder_recursive_implement(BinaryNode *currNode) const
 {
     if (currNode)
     {
@@ -260,7 +260,7 @@ void BST::inorder_recursive_implement(Node *currNode) const
     }
 }
 
-void BST::postorder_recursive_implement(Node *currNode) const
+void BinarySearchTree::postorder_recursive_implement(BinaryNode *currNode) const
 {
     if (currNode)
     {
@@ -271,13 +271,13 @@ void BST::postorder_recursive_implement(Node *currNode) const
     }
 }
 
-void BST::preorder_iterative() const
+void BinarySearchTree::preorder_iterative() const
 {
     if (empty())
         std::cout << "BST is empty !" << std::endl;
     else
     {
-        std::stack<Node *> stack;
+        std::stack<BinaryNode *> stack;
 
         std::cout << "preorder_iterative: ";
 
@@ -285,7 +285,7 @@ void BST::preorder_iterative() const
 
         while (!stack.empty())
         {
-            Node *tempNode = stack.top();
+            BinaryNode *tempNode = stack.top();
 
             stack.pop();
 
@@ -302,7 +302,7 @@ void BST::preorder_iterative() const
     }
 }
 
-void BST::preorder_recursive() const
+void BinarySearchTree::preorder_recursive() const
 {
     if (empty())
         std::cout << "BST is empty !" << std::endl;
@@ -314,17 +314,17 @@ void BST::preorder_recursive() const
     }
 }
 
-void BST::inorder_iterative() const
+void BinarySearchTree::inorder_iterative() const
 {
     if (empty())
         std::cout << "BST is empty !" << std::endl;
     else
     {
-        std::stack<Node *> stack;
+        std::stack<BinaryNode *> stack;
 
         std::cout << "inorder_iterative: ";
 
-        Node *currNode = m_root;
+        BinaryNode *currNode = m_root;
 
         while (!stack.empty() || currNode)
         {
@@ -348,7 +348,7 @@ void BST::inorder_iterative() const
     }
 }
 
-void BST::inorder_recursive() const
+void BinarySearchTree::inorder_recursive() const
 {
     if (empty())
         std::cout << "BST is empty !" << std::endl;
@@ -360,14 +360,14 @@ void BST::inorder_recursive() const
     }
 }
 
-void BST::postorder_iterative() const
+void BinarySearchTree::postorder_iterative() const
 {
     if (empty())
         std::cout << "BST is empty !" << std::endl;
     else
     {
-        std::stack<Node *> stack_node;
-        std::stack<Node *> stack_value;
+        std::stack<BinaryNode *> stack_node;
+        std::stack<BinaryNode *> stack_value;
 
         std::cout << "postorder_iterative: ";
 
@@ -375,7 +375,7 @@ void BST::postorder_iterative() const
 
         while (!stack_node.empty())
         {
-            Node *tempNode = stack_node.top();
+            BinaryNode *tempNode = stack_node.top();
 
             stack_node.pop();
             stack_value.push(tempNode);
@@ -389,7 +389,7 @@ void BST::postorder_iterative() const
 
         while (!stack_value.empty())
         {
-            Node *tempNode = stack_value.top();
+            BinaryNode *tempNode = stack_value.top();
 
             for (size_t i = 0; i < tempNode->getCount(); i++)
                 std::cout << tempNode->getNumber() << " ";
@@ -400,7 +400,7 @@ void BST::postorder_iterative() const
     }
 }
 
-void BST::postorder_recursive() const
+void BinarySearchTree::postorder_recursive() const
 {
     if (empty())
         std::cout << "BST is empty !" << std::endl;
@@ -412,13 +412,13 @@ void BST::postorder_recursive() const
     }
 }
 
-void BST::levelorder() const
+void BinarySearchTree::levelorder() const
 {
     if (empty())
         std::cout << "BST is empty !" << std::endl;
     else
     {
-        std::queue<Node *> queue;
+        std::queue<BinaryNode *> queue;
 
         std::cout << "levelorder: ";
 
@@ -426,7 +426,7 @@ void BST::levelorder() const
 
         while (!queue.empty())
         {
-            Node *tempNode = queue.front();
+            BinaryNode *tempNode = queue.front();
 
             for (size_t i = 0; i < tempNode->getCount(); i++)
                 std::cout << tempNode->getNumber() << " ";
@@ -443,7 +443,7 @@ void BST::levelorder() const
     }
 }
 
-bool BST::search(double num) const
+bool BinarySearchTree::search(double num) const
 {
     if (empty())
     {
@@ -452,7 +452,7 @@ bool BST::search(double num) const
     }
     else
     {
-        Node *currNode = m_root;
+        BinaryNode *currNode = m_root;
 
         while (currNode && currNode->getNumber() != num)
         {
@@ -465,17 +465,17 @@ bool BST::search(double num) const
     }
 }
 
-bool BST::empty() const
+bool BinarySearchTree::empty() const
 {
     return (m_root) ? false : true;
 }
 
-size_t BST::getSize() const
+size_t BinarySearchTree::getSize() const
 {
     return m_size;
 }
 
-Node *BST::successor(Node *currNode) const
+BinaryNode *BinarySearchTree::successor(BinaryNode *currNode) const
 {
     currNode = currNode->getRightPtr();
 
@@ -485,7 +485,7 @@ Node *BST::successor(Node *currNode) const
     return currNode;
 }
 
-Node *BST::predecessor(Node *currNode) const
+BinaryNode *BinarySearchTree::predecessor(BinaryNode *currNode) const
 {
     currNode = currNode->getLeftPtr();
 
@@ -495,13 +495,13 @@ Node *BST::predecessor(Node *currNode) const
     return currNode;
 }
 
-void BST::test()
+void BinarySearchTree::test()
 {
     std::cout << successor(m_root->getLeftPtr())->getNumber() << std::endl;
     std::cout << predecessor(m_root->getLeftPtr())->getNumber() << std::endl;
 }
 
-std::ostream &operator<<(std::ostream &out, const BST &bst)
+std::ostream &operator<<(std::ostream &out, const BinarySearchTree &bst)
 {
     bst.preorder_recursive();
     bst.preorder_iterative();
