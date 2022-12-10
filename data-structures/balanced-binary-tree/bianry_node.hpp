@@ -11,7 +11,8 @@ private:
 
 public:
     inline explicit BinaryNode() = delete;
-    inline explicit BinaryNode(T data);
+    inline explicit BinaryNode(const T& data);
+    inline explicit BinaryNode(const T& data, BinaryNode<T> *leftTreePtr, BinaryNode<T> *rightTreePtr);
     inline BinaryNode(const BinaryNode<T> &binaryNode) = delete;
     inline BinaryNode &operator=(const BinaryNode<T> &binaryNode) = delete;
     ~BinaryNode() = default;
@@ -24,7 +25,12 @@ public:
 };
 
 template <class T>
-BinaryNode<T>::BinaryNode(T data) : m_data(data), m_leftPtr(nullptr), m_rightPtr(nullptr)
+BinaryNode<T>::BinaryNode(const T& data) : m_data(data), m_leftPtr(nullptr), m_rightPtr(nullptr)
+{
+}
+
+template <class T>
+BinaryNode<T>::BinaryNode(const T& data, BinaryNode<T> *leftTreePtr, BinaryNode<T> *rightTreePtr) : m_data(data), m_leftPtr(leftTreePtr), m_rightPtr(rightTreePtr)
 {
 }
 

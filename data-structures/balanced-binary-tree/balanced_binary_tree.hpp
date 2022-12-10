@@ -1,5 +1,5 @@
-#if !defined(BALANCED_BINARY_TREE)
-#define BALANCED_BINARY_TREE
+#if !defined(BALANCED_BINARY_TREE_H)
+#define BALANCED_BINARY_TREE_H
 
 #define FLAG true //* Recursive(true), Iterative(false)
 
@@ -13,7 +13,7 @@ template <class T>
 class BalancedBinaryTree
 {
 private:
-    BinaryNode<T> *m_root;
+    BinaryNode<T> *m_rootPtr;
     size_t m_size;
 
 private:
@@ -23,35 +23,61 @@ private:
     bool removeNodeIter(BinaryNode<T> *subTreePtr, const T &value);
     size_t getTreeHeight(const BinaryNode<T> *subTreePtr) const;
     BinaryNode<T> *destroyTree(BinaryNode<T> *subTreePtr);
+    BinaryNode<T> *copyTree(const BinaryNode<T> *subTreePtr);
 
 public:
     inline explicit BalancedBinaryTree();
     inline explicit BalancedBinaryTree(const std::initializer_list<T> &list);
+    inline explicit BalancedBinaryTree(const T &data, const BalancedBinaryTree<T> &leftTree, const BalancedBinaryTree<T> &rightTree);
     ~BalancedBinaryTree();
-    inline BalancedBinaryTree(const BalancedBinaryTree<T> &tree) = delete;
-    inline BalancedBinaryTree<T> &operator=(const BalancedBinaryTree<T> &tree) = delete;
+    inline BalancedBinaryTree(const BalancedBinaryTree<T> &tree);
+    inline BalancedBinaryTree<T> &operator=(const BalancedBinaryTree<T> &tree);
     inline void insertValue(const T &value);
     inline bool removeValue(const T &value);
     inline size_t getHeight() const;
     inline void clear();
+    inline const BinaryNode<T> *const getRootPtr() const;
 };
 
 template <class T>
-BalancedBinaryTree<T>::BalancedBinaryTree() : m_root(nullptr), m_size(0)
+BalancedBinaryTree<T>::BalancedBinaryTree() : m_rootPtr(nullptr), m_size(0)
 {
 }
 
 template <class T>
-BalancedBinaryTree<T>::BalancedBinaryTree(const std::initializer_list<T> &list) : m_root(nullptr), m_size(0)
+BalancedBinaryTree<T>::BalancedBinaryTree(const std::initializer_list<T> &list) : m_rootPtr(nullptr), m_size(0)
 {
     for (const T &i : list)
         insertValue(i);
 }
 
 template <class T>
+BalancedBinaryTree<T>::BalancedBinaryTree(const T &data, const BalancedBinaryTree<T> &leftTree, const BalancedBinaryTree<T> &rightTree) : m_rootPtr(new BinaryNode<T>(data, copyTree(leftTree.m_rootPtr), copyTree(rightTree.m_rootPtr)))
+{
+}
+
+template <class T>
 BalancedBinaryTree<T>::~BalancedBinaryTree()
 {
-    destroyTree(m_root);
+    destroyTree(m_rootPtr);
+}
+
+template <class T>
+BalancedBinaryTree<T>::BalancedBinaryTree(const BalancedBinaryTree<T> &tree)
+{
+    if (tree.m_rootPtr)
+        m_rootPtr = copyTree(tree.m_rootPtr);
+    else
+        BalancedBinaryTree();
+}
+
+template <class T>
+BalancedBinaryTree<T> &BalancedBinaryTree<T>::operator=(const BalancedBinaryTree<T> &tree)
+{
+    if (tree.m_rootPtr)
+        m_rootPtr = copyTree(tree.m_rootPtr);
+    else
+        BalancedBinaryTree();
 }
 
 template <class T>
@@ -60,9 +86,9 @@ void BalancedBinaryTree<T>::insertValue(const T &value)
     BinaryNode<T> *newNodePtr = new BinaryNode<T>(value);
 
 #if FLAG == true
-    m_root = insertNodeRecur(m_root, newNodePtr);
+    m_rootPtr = insertNodeRecur(m_rootPtr, newNodePtr);
 #else
-    insertNodeIter(m_root, newNodePtr);
+    insertNodeIter(m_rootPtr, newNodePtr);
 #endif
 
     ++m_size;
@@ -74,16 +100,16 @@ bool BalancedBinaryTree<T>::removeValue(const T &value)
     bool isRemove = false;
 
 #if FLAG == true
-    isRemove = removeNodeRecur(m_root, value);
+    isRemove = removeNodeRecur(m_rootPtr, value);
 #else
-    isRemove = removeNodeIter(m_root, value);
+    isRemove = removeNodeIter(m_rootPtr, value);
 #endif
 
     if (isRemove)
         --m_size;
 
     if (m_size == 0)
-        m_root = nullptr;
+        m_rootPtr = nullptr;
 
     return isRemove;
 }
@@ -125,6 +151,7 @@ bool BalancedBinaryTree<T>::removeNodeRecur(BinaryNode<T> *subTreePtr, const T &
         removeNodeRecur(subTreePtr->getLeftPtr(), value);
         removeNodeRecur(subTreePtr->getRightPtr(), value);
     }
+    return true;
 }
 
 template <class T>
@@ -135,8 +162,8 @@ void BalancedBinaryTree<T>::insertNodeIter(BinaryNode<T> *subTreePtr, BinaryNode
 template <class T>
 size_t BalancedBinaryTree<T>::getHeight() const
 {
-    if (m_root)
-        return std::max(getTreeHeight(m_root->getLeftPtr()), getTreeHeight(m_root->getRightPtr()));
+    if (m_rootPtr)
+        return std::max(getTreeHeight(m_rootPtr->getLeftPtr()), getTreeHeight(m_rootPtr->getRightPtr()));
     else
         return 0;
 }
@@ -153,7 +180,7 @@ size_t BalancedBinaryTree<T>::getTreeHeight(const BinaryNode<T> *subTreePtr) con
 template <class T>
 void BalancedBinaryTree<T>::clear()
 {
-    m_root = destroyTree(m_root);
+    m_rootPtr = destroyTree(m_rootPtr);
 }
 
 template <class T>
@@ -168,6 +195,28 @@ BinaryNode<T> *BalancedBinaryTree<T>::destroyTree(BinaryNode<T> *subTreePtr)
         subTreePtr = nullptr;
         return subTreePtr;
     }
+
+    return subTreePtr;
 }
 
-#endif // BALANCED_BINARY_TREE
+template <class T>
+BinaryNode<T> *BalancedBinaryTree<T>::copyTree(const BinaryNode<T> *subTreePtr)
+{
+    if (!subTreePtr)
+        return nullptr;
+
+    BinaryNode<T> *newNodePtr = new BinaryNode<T>(subTreePtr->getData());
+
+    newNodePtr->setLeftPtr(copyTree(subTreePtr->getLeftPtr()));
+    newNodePtr->setRightPtr(copyTree(subTreePtr->getRightPtr()));
+
+    return newNodePtr;
+}
+
+template <class T>
+const BinaryNode<T> *const BalancedBinaryTree<T>::getRootPtr() const
+{
+    return m_rootPtr;
+}
+
+#endif // BALANCED_BINARY_TREE_H
