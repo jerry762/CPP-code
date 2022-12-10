@@ -1,30 +1,30 @@
-#if !defined(MY_LINKED_LIST_H)
-#define MY_LINKED_LIST_H
+#if !defined(DOUBLY_LINKED_LIST_H)
+#define DOUBLY_LINKED_LIST_H
 
 #include <initializer_list>
 #include <iostream>
-#include "node.hpp"
+#include "doubly_linked_node.hpp"
 
 // TODO: This is the starting point of the declaration.
 
-class LinkedList
+class DoublyLinkedList
 {
 private:
-    Node *m_headPtr;
-    Node *m_tailPtr;
+    DoublyLinkedNode *m_headPtr;
+    DoublyLinkedNode *m_tailPtr;
     size_t m_size;
-    Node *reverse_recursive_implement(Node *currNode);                          //* completed
-    void reset();                                                               //* completed
-    friend std::ostream &operator<<(std::ostream &out, const LinkedList &list); //* completed
+    DoublyLinkedNode *reverse_recursive_implement(DoublyLinkedNode *currNode);        //* completed
+    void reset();                                                                     //* completed
+    friend std::ostream &operator<<(std::ostream &out, const DoublyLinkedList &list); //* completed
 
 public:
-    explicit LinkedList();                              //* completed
-    explicit LinkedList(size_t size);                   //* completed
-    LinkedList(size_t size, double fillNum);            //* completed
-    LinkedList(std::initializer_list<double> list);     //* completed
-    ~LinkedList();                                      //* completed
-    LinkedList(const LinkedList &) = delete;            //* completed (delete copy constructor)
-    LinkedList &operator=(const LinkedList &) = delete; //* completed (delete copy assignment)
+    explicit DoublyLinkedList();                                    //* completed
+    explicit DoublyLinkedList(size_t size);                         //* completed
+    DoublyLinkedList(size_t size, double fillNum);                  //* completed
+    DoublyLinkedList(const std::initializer_list<double> &list);    //* completed
+    ~DoublyLinkedList();                                            //* completed
+    DoublyLinkedList(const DoublyLinkedList &) = delete;            //* completed (delete copy constructor)
+    DoublyLinkedList &operator=(const DoublyLinkedList &) = delete; //* completed (delete copy assignment)
 
     double &front() const;
     double &back() const;
@@ -41,34 +41,34 @@ public:
     void reverse_recursive(); //* completed
     void reverse_iterative(); //* completed
 
-    void operator+=(const LinkedList &myList) const;
+    void operator+=(const DoublyLinkedList &myList) const;
 };
 
 // TODO: This is the starting point of the definition.
 
-LinkedList::LinkedList() : m_headPtr(nullptr), m_tailPtr(nullptr), m_size(0) {}
+DoublyLinkedList::DoublyLinkedList() : m_headPtr(nullptr), m_tailPtr(nullptr), m_size(0) {}
 
-LinkedList::LinkedList(size_t size) : m_headPtr(nullptr), m_tailPtr(nullptr), m_size(0)
+DoublyLinkedList::DoublyLinkedList(size_t size) : m_headPtr(nullptr), m_tailPtr(nullptr), m_size(0)
 {
     for (size_t i = 0; i < size; i++)
         push_front(0);
 }
 
-LinkedList::LinkedList(size_t size, double fillNum) : m_headPtr(nullptr), m_tailPtr(nullptr), m_size(0)
+DoublyLinkedList::DoublyLinkedList(size_t size, double fillNum) : m_headPtr(nullptr), m_tailPtr(nullptr), m_size(0)
 {
     for (size_t i = 0; i < size; i++)
         push_front(fillNum);
 }
 
-LinkedList::LinkedList(std::initializer_list<double> list) : m_headPtr(nullptr), m_tailPtr(nullptr), m_size(0)
+DoublyLinkedList::DoublyLinkedList(const std::initializer_list<double> &list) : m_headPtr(nullptr), m_tailPtr(nullptr), m_size(0)
 {
-    for (const double i : list)
+    for (const double &i : list)
         push_back(i);
 }
 
-LinkedList::~LinkedList()
+DoublyLinkedList::~DoublyLinkedList()
 {
-    Node *currNode;
+    DoublyLinkedNode *currNode;
 
     while (m_headPtr)
     {
@@ -78,14 +78,14 @@ LinkedList::~LinkedList()
     }
 }
 
-// double &LinkedList::front() const
+// double &DoublyLinkedList::front() const
 // {
 //     return m_headPtr->getNumber();
 // }
 
-void LinkedList::push_front(double num)
+void DoublyLinkedList::push_front(double num)
 {
-    Node *newNode = new Node(num);
+    DoublyLinkedNode *newNode = new DoublyLinkedNode(num);
 
     if (empty())
     {
@@ -101,9 +101,9 @@ void LinkedList::push_front(double num)
     m_size++;
 }
 
-void LinkedList::push_back(double num)
+void DoublyLinkedList::push_back(double num)
 {
-    Node *newNode = new Node(num);
+    DoublyLinkedNode *newNode = new DoublyLinkedNode(num);
 
     if (empty())
     {
@@ -119,13 +119,13 @@ void LinkedList::push_back(double num)
     m_size++;
 }
 
-void LinkedList::pop_front()
+void DoublyLinkedList::pop_front()
 {
     if (empty())
-        std::cout << "LinkedList is empty !" << std::endl;
+        std::cout << "DoublyLinkedList is empty !" << std::endl;
     else
     {
-        Node *currNode = m_headPtr;
+        DoublyLinkedNode *currNode = m_headPtr;
         m_headPtr = currNode->getNextPtr();
         m_headPtr->setPrevPtr(nullptr);
         delete currNode;
@@ -135,13 +135,13 @@ void LinkedList::pop_front()
     }
 }
 
-void LinkedList::pop_back()
+void DoublyLinkedList::pop_back()
 {
     if (empty())
-        std::cout << "LinkedList is empty !" << std::endl;
+        std::cout << "DoublyLinkedList is empty !" << std::endl;
     else
     {
-        Node *currNode = m_tailPtr;
+        DoublyLinkedNode *currNode = m_tailPtr;
         m_tailPtr = currNode->getPrevPtr();
         m_tailPtr->setNextPtr(nullptr);
         delete currNode;
@@ -151,19 +151,19 @@ void LinkedList::pop_back()
     }
 }
 
-bool LinkedList::empty() const
+bool DoublyLinkedList::empty() const
 {
     return (size() == 0) ? true : false;
 }
 
-size_t LinkedList::size() const
+size_t DoublyLinkedList::size() const
 {
     return m_size;
 }
 
-void LinkedList::clear()
+void DoublyLinkedList::clear()
 {
-    Node *currNode;
+    DoublyLinkedNode *currNode;
 
     while (m_headPtr)
     {
@@ -175,14 +175,14 @@ void LinkedList::clear()
     reset();
 }
 
-void LinkedList::insert(double num)
+void DoublyLinkedList::insert(double num)
 {
     if (empty())
         push_back(num);
     else
     {
-        Node *currNode = m_headPtr;
-        Node *prevNode = nullptr;
+        DoublyLinkedNode *currNode = m_headPtr;
+        DoublyLinkedNode *prevNode = nullptr;
         int position;
         int count = 0;
 
@@ -209,7 +209,7 @@ void LinkedList::insert(double num)
             push_back(num);
         else
         {
-            Node *newNode = new Node(num);
+            DoublyLinkedNode *newNode = new DoublyLinkedNode(num);
 
             for (int i = 0; i < position; i++)
             {
@@ -226,14 +226,14 @@ void LinkedList::insert(double num)
     }
 }
 
-void LinkedList::remove(double num)
+void DoublyLinkedList::remove(double num)
 {
     if (empty())
-        std::cout << "LinkedList is empty !";
+        std::cout << "DoublyLinkedList is empty !";
     else
     {
-        Node *currNode = m_headPtr;
-        Node *prevNode = nullptr;
+        DoublyLinkedNode *currNode = m_headPtr;
+        DoublyLinkedNode *prevNode = nullptr;
 
         while (currNode && currNode->getNumber() != num)
         {
@@ -259,15 +259,15 @@ void LinkedList::remove(double num)
     }
 }
 
-void LinkedList::reverse_iterative()
+void DoublyLinkedList::reverse_iterative()
 {
     if (empty())
-        std::cout << "LinkedList is empty !" << std::endl;
+        std::cout << "DoublyLinkedList is empty !" << std::endl;
     else
     {
-        Node *prevNode = nullptr;
-        Node *currNode = m_headPtr;
-        Node *postNode = m_headPtr->getNextPtr();
+        DoublyLinkedNode *prevNode = nullptr;
+        DoublyLinkedNode *currNode = m_headPtr;
+        DoublyLinkedNode *postNode = m_headPtr->getNextPtr();
 
         while (postNode)
         {
@@ -283,13 +283,13 @@ void LinkedList::reverse_iterative()
     }
 }
 
-void LinkedList::reverse_recursive()
+void DoublyLinkedList::reverse_recursive()
 {
     if (empty())
-        std::cout << "LinkedList is empty !" << std::endl;
+        std::cout << "DoublyLinkedList is empty !" << std::endl;
     else
     {
-        Node *tempNode;
+        DoublyLinkedNode *tempNode;
         tempNode = reverse_recursive_implement(m_headPtr);
         tempNode->setPrevPtr(tempNode->getNextPtr());
         tempNode->setNextPtr(nullptr);
@@ -297,32 +297,32 @@ void LinkedList::reverse_recursive()
     }
 }
 
-Node *LinkedList::reverse_recursive_implement(Node *currNode)
+DoublyLinkedNode *DoublyLinkedList::reverse_recursive_implement(DoublyLinkedNode *currNode)
 {
     if (!currNode->getNextPtr())
         return currNode;
 
-    Node *postNode = reverse_recursive_implement(currNode->getNextPtr());
+    DoublyLinkedNode *postNode = reverse_recursive_implement(currNode->getNextPtr());
 
     postNode->setPrevPtr(postNode->getNextPtr());
     postNode->setNextPtr(currNode);
     return currNode;
 }
 
-void LinkedList::reset()
+void DoublyLinkedList::reset()
 {
     m_headPtr = nullptr;
     m_tailPtr = nullptr;
     m_size = 0;
 }
 
-std::ostream &operator<<(std::ostream &out, const LinkedList &list)
+std::ostream &operator<<(std::ostream &out, const DoublyLinkedList &list)
 {
     if (list.empty())
-        out << "LinkedList is empty !";
+        out << "DoublyLinkedList is empty !";
     else
     {
-        Node *currNode = list.m_headPtr;
+        DoublyLinkedNode *currNode = list.m_headPtr;
         while (currNode->getNextPtr())
         {
             out << currNode->getNumber() << " ";
@@ -332,10 +332,10 @@ std::ostream &operator<<(std::ostream &out, const LinkedList &list)
     }
 
     // if (list.empty())
-    //     out << "LinkedList is empty !";
+    //     out << "DoublyLinkedList is empty !";
     // else
     // {
-    //     Node *currNode = list.m_tailPtr;
+    //     DoublyLinkedNode *currNode = list.m_tailPtr;
     //     while (currNode->getPrevPtr())
     //     {
     //         out << currNode->getNumber() << " ";
@@ -347,4 +347,4 @@ std::ostream &operator<<(std::ostream &out, const LinkedList &list)
     return out;
 }
 
-#endif // MY_LINKED_LIST_H
+#endif // DOUBLY_LINKED_LIST_H

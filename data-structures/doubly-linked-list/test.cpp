@@ -3,7 +3,7 @@
 
 int main()
 {
-    LinkedList a(5), b(8, 10), c{1, 2, 3, 4, 5, 6, 7, 8, 9};
+    DoublyLinkedList a(5), b(8, 10), c{1, 2, 3, 4, 5, 6, 7, 8, 9};
 
     a.push_front(6);
     a.push_front(7);
