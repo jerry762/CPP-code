@@ -78,10 +78,18 @@ BinaryTree<T>::BinaryTree(const BinaryTree<T> &tree)
 template <class T>
 BinaryTree<T> &BinaryTree<T>::operator=(const BinaryTree<T> &tree)
 {
+    if (this == &tree)
+        return *this;
+
     if (tree.m_rootPtr)
+    {
         m_rootPtr = copyTree(tree.m_rootPtr);
+        setSize(tree.getSize());
+    }
     else
         BinaryTree();
+
+    return *this;
 }
 
 template <class T>
