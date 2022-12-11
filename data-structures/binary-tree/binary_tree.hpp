@@ -26,6 +26,7 @@ private:
     BinaryNode<T> *copyTree(const BinaryNode<T> *subTreePtr);
     inline void increaseSize();
     inline void decreaseSize();
+    inline void setSize(const size_t &size);
 
 public:
     inline explicit BinaryTree();
@@ -94,7 +95,7 @@ void BinaryTree<T>::insertValue(const T &value)
     insertNodeIter(m_rootPtr, newNodePtr);
 #endif
 
-    ++m_size;
+    increaseSize();
 }
 
 template <class T>
@@ -184,6 +185,7 @@ template <class T>
 void BinaryTree<T>::clear()
 {
     m_rootPtr = destroyTree(m_rootPtr);
+    setSize(0);
 }
 
 template <class T>
@@ -238,6 +240,12 @@ template <class T>
 size_t BinaryTree<T>::getSize() const
 {
     return m_size;
+}
+
+template <class T>
+void BinaryTree<T>::setSize(const size_t &size)
+{
+    m_size = size;
 }
 
 #endif // BINARY_TREE_H
