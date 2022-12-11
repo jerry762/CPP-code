@@ -24,6 +24,8 @@ private:
     size_t getTreeHeight(const BinaryNode<T> *subTreePtr) const;
     BinaryNode<T> *destroyTree(BinaryNode<T> *subTreePtr);
     BinaryNode<T> *copyTree(const BinaryNode<T> *subTreePtr);
+    inline void increaseSize();
+    inline void decreaseSize();
 
 public:
     inline explicit BinaryTree();
@@ -36,6 +38,7 @@ public:
     inline bool removeValue(const T &value);
     inline size_t getHeight() const;
     inline void clear();
+    inline size_t getSize() const;
     inline const BinaryNode<T> *const getRootPtr() const;
 };
 
@@ -52,7 +55,7 @@ BinaryTree<T>::BinaryTree(const std::initializer_list<T> &list) : m_rootPtr(null
 }
 
 template <class T>
-BinaryTree<T>::BinaryTree(const T &data, const BinaryTree<T> &leftTree, const BinaryTree<T> &rightTree) : m_rootPtr(new BinaryNode<T>(data, copyTree(leftTree.m_rootPtr), copyTree(rightTree.m_rootPtr)))
+BinaryTree<T>::BinaryTree(const T &data, const BinaryTree<T> &leftTree, const BinaryTree<T> &rightTree) : m_rootPtr(new BinaryNode<T>(data, copyTree(leftTree.m_rootPtr), copyTree(rightTree.m_rootPtr))), m_size(1 + leftTree.getSize() + rightTree.getSize())
 {
 }
 
@@ -217,6 +220,24 @@ template <class T>
 const BinaryNode<T> *const BinaryTree<T>::getRootPtr() const
 {
     return m_rootPtr;
+}
+
+template <class T>
+void BinaryTree<T>::increaseSize()
+{
+    ++m_size;
+}
+
+template <class T>
+void BinaryTree<T>::decreaseSize()
+{
+    --m_size;
+}
+
+template <class T>
+size_t BinaryTree<T>::getSize() const
+{
+    return m_size;
 }
 
 #endif // BINARY_TREE_H
