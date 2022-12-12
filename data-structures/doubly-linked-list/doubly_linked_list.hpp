@@ -13,9 +13,11 @@ private:
     DoublyLinkedNode *m_headPtr;
     DoublyLinkedNode *m_tailPtr;
     size_t m_size;
-    DoublyLinkedNode *reverse_recursive_implement(DoublyLinkedNode *currNode);        //* completed
-    void reset();                                                                     //* completed
     friend std::ostream &operator<<(std::ostream &out, const DoublyLinkedList &list); //* completed
+private:
+    DoublyLinkedNode *reverse_recursive_implement(DoublyLinkedNode *currNode); //* completed
+    void reset();                                                              //* completed
+    void destroyList();                                                        //* completed
 
 public:
     explicit DoublyLinkedList();                                    //* completed
@@ -68,14 +70,7 @@ DoublyLinkedList::DoublyLinkedList(const std::initializer_list<double> &list) : 
 
 DoublyLinkedList::~DoublyLinkedList()
 {
-    DoublyLinkedNode *currNode;
-
-    while (m_headPtr)
-    {
-        currNode = m_headPtr;
-        m_headPtr = currNode->getNextPtr();
-        delete currNode;
-    }
+    destroyList();
 }
 
 // double &DoublyLinkedList::front() const
@@ -163,16 +158,7 @@ size_t DoublyLinkedList::size() const
 
 void DoublyLinkedList::clear()
 {
-    DoublyLinkedNode *currNode;
-
-    while (m_headPtr)
-    {
-        currNode = m_headPtr;
-        m_headPtr = currNode->getNextPtr();
-        delete currNode;
-    }
-
-    reset();
+    destroyList();
 }
 
 void DoublyLinkedList::insert(double num)
@@ -345,6 +331,20 @@ std::ostream &operator<<(std::ostream &out, const DoublyLinkedList &list)
     // }
 
     return out;
+}
+
+void DoublyLinkedList::destroyList()
+{
+    DoublyLinkedNode *currNode;
+
+    while (m_headPtr)
+    {
+        currNode = m_headPtr;
+        m_headPtr = currNode->getNextPtr();
+        delete currNode;
+    }
+
+    reset();
 }
 
 #endif // DOUBLY_LINKED_LIST_H
