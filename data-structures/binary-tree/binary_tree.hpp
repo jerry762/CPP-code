@@ -6,6 +6,7 @@
 #include <iostream>
 #include <algorithm>
 #include <initializer_list>
+#include <queue>
 
 #include "bianry_node.hpp"
 
@@ -24,6 +25,7 @@ private:
     size_t getTreeHeight(const BinaryNode<T> *subTreePtr) const;
     BinaryNode<T> *destroyTree(BinaryNode<T> *subTreePtr);
     BinaryNode<T> *copyTree(const BinaryNode<T> *subTreePtr);
+    void levelorderTree() const;
     inline void increaseSize();
     inline void decreaseSize();
     inline void setSize(const size_t &size);
@@ -41,6 +43,8 @@ public:
     inline void clear();
     inline size_t getSize() const;
     inline const BinaryNode<T> *const getRootPtr() const;
+    inline void levelorder() const;
+    inline bool empty() const;
 };
 
 template <class T>
@@ -254,6 +258,51 @@ template <class T>
 void BinaryTree<T>::setSize(const size_t &size)
 {
     m_size = size;
+}
+
+template <class T>
+bool BinaryTree<T>::empty() const
+{
+    return (getSize() == 0) ? true : false;
+}
+
+template <class T>
+void BinaryTree<T>::levelorder() const
+{
+    if (empty())
+    {
+        std::cout << "empty !" << std::endl;
+    }
+    else
+    {
+        levelorderTree();
+        std::cout << std::endl;
+    }
+}
+
+template <class T>
+void BinaryTree<T>::levelorderTree() const
+{
+    std::queue<BinaryNode<T> *> queue;
+
+    queue.push(m_rootPtr);
+
+    while (!queue.empty())
+    {
+        BinaryNode<T> *tempNodePtr = queue.front();
+        BinaryNode<T> *leftPtr = tempNodePtr->getLeftPtr();
+        BinaryNode<T> *rightPtr = tempNodePtr->getRightPtr();
+
+        queue.pop();
+
+        if (leftPtr)
+            queue.push(leftPtr);
+
+        if (rightPtr)
+            queue.push(rightPtr);
+
+        std::cout << tempNodePtr->getData() << " ";
+    }
 }
 
 #endif // BINARY_TREE_H

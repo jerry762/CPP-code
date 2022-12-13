@@ -13,9 +13,13 @@ int main()
 
     std::cout << tree.getRootPtr() << " " << tree3.getRootPtr() << std::endl;
 
+    tree3.levelorder();
+
     tree3.clear();
 
-    std::cout << tree3.getSize();
+    std::cout << tree3.getSize() << std::endl;
+
+    
 
     return 0;
 }
