@@ -19,7 +19,7 @@ struct value
 
 void printMatrix(std::array<std::array<value, COLUMN>, ROW> &arr);
 
-//* up -> left -> down -> right
+//* right -> down -> left -> up
 void DFSMatrix(std::array<std::array<value, COLUMN>, ROW> &arr, std::pair<int, int> point);
 
 int main()
@@ -33,7 +33,7 @@ int main()
     std::array<std::array<value, COLUMN>, ROW> arr;
 
     // DFSMatrix(arr, std::make_pair(distRow(gen), distColumn(gen))); //* random
-    DFSMatrix(arr, std::make_pair(ROW - 1, COLUMN - 1)); //* bottom-right corner
+    DFSMatrix(arr, std::make_pair(0, 0)); //* start at top-left corner
 
     system("pause");
     return 0;
@@ -45,17 +45,17 @@ void DFSMatrix(std::array<std::array<value, COLUMN>, ROW> &arr, std::pair<int, i
 
     printMatrix(arr);
 
-    if (point.first - 1 >= 0 && !arr.at(point.first - 1).at(point.second).isVisited)
-        DFSMatrix(arr, std::make_pair(point.first - 1, point.second));
-
-    if (point.second - 1 >= 0 && !arr.at(point.first).at(point.second - 1).isVisited)
-        DFSMatrix(arr, std::make_pair(point.first, point.second - 1));
+    if (point.second + 1 < COLUMN && !arr.at(point.first).at(point.second + 1).isVisited)
+        DFSMatrix(arr, std::make_pair(point.first, point.second + 1));
 
     if (point.first + 1 < ROW && !arr.at(point.first + 1).at(point.second).isVisited)
         DFSMatrix(arr, std::make_pair(point.first + 1, point.second));
 
-    if (point.second + 1 < COLUMN && !arr.at(point.first).at(point.second + 1).isVisited)
-        DFSMatrix(arr, std::make_pair(point.first, point.second + 1));
+    if (point.second - 1 >= 0 && !arr.at(point.first).at(point.second - 1).isVisited)
+        DFSMatrix(arr, std::make_pair(point.first, point.second - 1));
+
+    if (point.first - 1 >= 0 && !arr.at(point.first - 1).at(point.second).isVisited)
+        DFSMatrix(arr, std::make_pair(point.first - 1, point.second));
 }
 
 void printMatrix(std::array<std::array<value, COLUMN>, ROW> &arr)
