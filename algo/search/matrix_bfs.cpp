@@ -82,6 +82,35 @@ void BFSMatrix(std::array<std::array<value, COLUMN>, ROW> &arr, std::pair<int, i
             arr.at(temp.first).at(temp.second + 1).isVisited = true;
             printMatrix(arr);
         }
+
+        if (temp.first - 1 >= 0 && temp.second - 1 >= 0 && !arr.at(temp.first - 1).at(temp.second - 1).isVisited)
+        {
+            queue.push(std::make_pair(temp.first - 1, temp.second - 1));
+            arr.at(temp.first - 1).at(temp.second - 1).isVisited = true;
+            printMatrix(arr);
+        }
+
+        if (temp.first - 1 >= 0 && temp.second + 1 < COLUMN && !arr.at(temp.first - 1).at(temp.second + 1).isVisited)
+        {
+            queue.push(std::make_pair(temp.first - 1, temp.second + 1));
+            arr.at(temp.first - 1).at(temp.second + 1).isVisited = true;
+            printMatrix(arr);
+        }
+
+        if (temp.first + 1 < ROW && temp.second - 1 >= 0 && !arr.at(temp.first + 1).at(temp.second - 1).isVisited)
+        {
+            queue.push(std::make_pair(temp.first + 1, temp.second - 1));
+            arr.at(temp.first + 1).at(temp.second - 1).isVisited = true;
+            printMatrix(arr);
+        }
+
+        if (temp.first + 1 < ROW && temp.second + 1 < COLUMN && !arr.at(temp.first + 1).at(temp.second + 1).isVisited)
+        {
+            queue.push(std::make_pair(temp.first + 1, temp.second + 1));
+            arr.at(temp.first + 1).at(temp.second + 1).isVisited = true;
+            printMatrix(arr);
+        }
+
         ++count;
     }
     std::cout << count << " rounds." << std::endl;
