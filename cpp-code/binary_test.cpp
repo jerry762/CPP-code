@@ -4,8 +4,10 @@
 #include <random>
 #include <cmath>
 
-#define SIZE 16 //* 0 ~ 15
-#define MODE 0
+#define SIZE 15 //* select range 2^5 ~ 2^15
+#define MIN 5
+#define MAX SIZE
+#define MODE 1 //* select play modes
 
 using namespace std;
 
@@ -32,9 +34,9 @@ int main()
 {
     unsigned int seed = chrono::system_clock::now().time_since_epoch().count();
     default_random_engine gen(seed);
-    uniform_int_distribution<int> dist(0, SIZE - 1);
+    uniform_int_distribution<int> dist(MIN, MAX);
 
-    array<unsigned int, SIZE> arr{0};
+    array<unsigned int, SIZE + 1> arr{0};
 
     for (size_t i = 0; i < arr.size(); i++)
         arr.at(i) = i;
@@ -45,12 +47,12 @@ int main()
 
 #if MODE
 
-        unsigned int ans = (1 << times);
+        unsigned int ans = times;
 
-        cout << "2^" << times << "? ";
+        cout << "2^X = " << (1 << times) << ", X = ? ";
         cin >> p_ans;
 
-        if (ans == p_ans)
+        if (ans == (unsigned int)log2(1 << p_ans))
             cout << "True !, ans is " << ans << endl;
         else
             cout << "False !, ans is " << ans << endl;
@@ -59,12 +61,12 @@ int main()
 
 #else
 
-        unsigned int ans = times;
+        unsigned int ans = (1 << times);
 
-        cout << "2^X = " << (1 << times) << ", X = ? ";
+        cout << "2^" << times << "? ";
         cin >> p_ans;
 
-        if (ans == (unsigned int)log2(1 << p_ans))
+        if (ans == p_ans)
             cout << "True !, ans is " << ans << endl;
         else
             cout << "False !, ans is " << ans << endl;
