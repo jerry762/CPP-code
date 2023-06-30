@@ -7,32 +7,46 @@
 
 #define SIZE 50'000
 
+//* time complexity: O(n^2)
 void bubble_sort(std::vector<int> &vec);
-void selection_sort(std::vector<int> &vec);
-void insertion_sort(std::vector<int> &vec);
-void merge_sort(std::vector<int> &vec, int left, int right);
-void quick_sort(std::vector<int> &vec, int left, int right);
 
-int partition(std::vector<int> &vec, int left, int right, int pivot);
+//* time complexity: O(n^2)
+void selection_sort(std::vector<int> &vec);
+
+//* time complexity: O(n^2)
+void insertion_sort(std::vector<int> &vec);
+
+//* time complexity: O(nlogn)
+void merge_sort(std::vector<int> &vec, int left, int right);
 void merge(std::vector<int> &vec, int left, int mid, int right);
+
+//* time complexity: O(nlogn)
+void quick_sort(std::vector<int> &vec, int left, int right);
+int partition(std::vector<int> &vec, int left, int right, int pivot);
+
+//* time complexity: O(nlogn)
+void heap_sort(std::vector<int> &vec);
+void heapify(std::vector<int> &vec, int size, int root);
 
 std::random_device rd;
 std::uniform_int_distribution<int> dist(1, 100);
 
 int main()
 {
+    std::cout << "Running..." << std::endl;
+
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
     std::default_random_engine gen(seed);
     std::uniform_int_distribution<int> dist(1, 1000000);
 
     std::chrono::time_point<std::chrono::steady_clock, std::chrono::duration<double>> start, end;
-    std::chrono::duration<double> time_span_bubble, time_span_insert, time_span_select, time_span_merge, time_span_quick;
+    std::chrono::duration<double> time_span_bubble, time_span_insert, time_span_select, time_span_merge, time_span_quick, time_span_heap;
     std::vector<int> vec_ori(SIZE);
 
     for (int &i : vec_ori)
         i = dist(gen);
 
-    std::vector<int> vec_bubble(vec_ori), vec_select(vec_ori), vec_insert(vec_ori), vec_merge(vec_ori), vec_quick(vec_ori);
+    std::vector<int> vec_bubble(vec_ori), vec_select(vec_ori), vec_insert(vec_ori), vec_merge(vec_ori), vec_quick(vec_ori), vec_heap(vec_ori);
 
     //* bubble test
 
@@ -84,11 +98,22 @@ int main()
 
     time_span_quick = end - start;
 
-    std::cout << std::left << std::setw(15) << "Bubble_Sort: " << std::setw(10) << time_span_bubble.count() << std::endl;
-    std::cout << std::left << std::setw(15) << "Select_Sort: " << std::setw(10) << time_span_select.count() << std::endl;
-    std::cout << std::left << std::setw(15) << "Insert_Sort: " << std::setw(10) << time_span_insert.count() << std::endl;
-    std::cout << std::left << std::setw(15) << "Merge_Sort: " << std::setw(10) << time_span_merge.count() << std::endl;
-    std::cout << std::left << std::setw(15) << "Quick_Sort: " << std::setw(10) << time_span_quick.count() << std::endl;
+    //* heap test
+
+    start = std::chrono::steady_clock::now();
+
+    heap_sort(vec_heap);
+
+    end = std::chrono::steady_clock::now();
+
+    time_span_heap = end - start;
+
+    std::cout << std::left << std::setw(15) << "Bubble_Sort: " << std::setw(10) << time_span_bubble.count() << "s" << std::endl;
+    std::cout << std::left << std::setw(15) << "Select_Sort: " << std::setw(10) << time_span_select.count() << "s" << std::endl;
+    std::cout << std::left << std::setw(15) << "Insert_Sort: " << std::setw(10) << time_span_insert.count() << "s" << std::endl;
+    std::cout << std::left << std::setw(15) << "Merge_Sort: " << std::setw(10) << time_span_merge.count() << "s" << std::endl;
+    std::cout << std::left << std::setw(15) << "Quick_Sort: " << std::setw(10) << time_span_quick.count() << "s" << std::endl;
+    std::cout << std::left << std::setw(15) << "Heap_Sort: " << std::setw(10) << time_span_heap.count() << "s" << std::endl;
 }
 
 void bubble_sort(std::vector<int> &vec)
@@ -212,4 +237,40 @@ int partition(std::vector<int> &vec, int left, int right, int pivot)
     std::swap(vec.at(storeIndex), vec.at(right));
 
     return storeIndex;
+}
+
+void heap_sort(std::vector<int> &vec)
+{
+    //* build heap
+    for (int i = vec.size() / 2 - 1; i >= 0; i--)
+        heapify(vec, vec.size(), i);
+
+    for (int i = vec.size() - 1; i > 0; i--)
+    {
+        std::swap(vec.at(0), vec.at(i));
+
+        heapify(vec, i, 0);
+    }
+}
+
+void heapify(std::vector<int> &vec, int size, int root)
+{
+    int max = root;
+
+    int l = 2 * root + 1;
+
+    int r = 2 * root + 2;
+
+    if (l < size && vec.at(l) > vec.at(max))
+        max = l;
+
+    if (r < size && vec[r] > vec[max])
+        max = r;
+
+    if (max != root)
+    {
+        std::swap(vec.at(root), vec.at(max));
+
+        heapify(vec, size, max);
+    }
 }
